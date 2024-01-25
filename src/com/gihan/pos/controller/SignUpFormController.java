@@ -1,5 +1,6 @@
 package com.gihan.pos.controller;
 
+import com.gihan.pos.util.PasswordManager;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
@@ -29,17 +30,25 @@ public class SignUpFormController {
           String sql="INSERT INTO user VALUES (?,?)";
           PreparedStatement preparedStatement=connection.prepareStatement(sql);
           preparedStatement.setString(1,txtEmail.getText());
-          preparedStatement.setString(2,txtPassWord.getText());
+          preparedStatement.setString(2, PasswordManager.encryptPassword(txtPassWord.getText()));
          if ( preparedStatement.executeUpdate()>0){
              new Alert(Alert.AlertType.CONFIRMATION,"Registration Success").show();
+             clearFields();
+
          }else {
              new Alert(Alert.AlertType.WARNING,"Try Again").show();
+             clearFields();
          }
         } catch (ClassNotFoundException | SQLException e) {
          new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
         }
 
 
+    }
+
+    private void clearFields() {
+        txtEmail.clear();
+        txtEmail.clear();
     }
 
     public void btnAlreadyHaveAnAccountOnAction(ActionEvent actionEvent) throws IOException {
